@@ -25,12 +25,12 @@ This document details the initial implementation of the Boyer-Moore string match
 
 ### Test Files
 
-| File Name               | Scenario                  | Patterns Included             |
-|-------------------------|--------------------------|-------------------------------|
-| sample_text1.txt        | Simple, control case     | pattern1.txt                  |
-| robust_test.txt         | Overlaps, multiples      | overlap.txt, pattern.txt      |
-| complicated_text.txt    | Case, symbol, multi-line | case.txt, withsymbol.txt, newline.txt, nonascii.txt |
-| notfound.txt            | Absent pattern           | xyz.txt                       |
+| File Name        | Scenario                  | Patterns Included             |
+|------------------|--------------------------|-------------------------------|
+| sample_text1.txt | Simple, control case     | pattern1.txt                  |
+| sample_text2.txt | Overlaps, multiples      | overlap.txt, pattern.txt      |
+| sample_text3.txt | Case, symbol, multi-line | case.txt, withsymbol.txt, newline.txt, nonascii.txt |
+| notfound.txt     | Absent pattern           | xyz.txt                       |
 
 ### Patterns Used
 
