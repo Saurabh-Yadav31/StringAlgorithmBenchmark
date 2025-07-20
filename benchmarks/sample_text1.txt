@@ -1,0 +1,1 @@
+Pattern matching algorithms are fundamental in computer science. They are used in search engines, DNA analysis, and many other applications.
