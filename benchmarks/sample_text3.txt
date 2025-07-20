@@ -1,0 +1,8 @@
+Pattern matching is fun. The pattern-pattern-pattern sequence should match three times.
+A complex pattern at the end: patt@ern!
+PATTERN? Let's test pattern at the Start, at the end: pattern, and in between pattern.
+Now try overlapping: anana in banana, and see if patternpattern finds two matches.
+What about non-ASCII: páttérn, patterned, and word-boundaries with pattern-matching or pattern's?
+Finally, try pattern
+pattern
+pattern on separate lines.
