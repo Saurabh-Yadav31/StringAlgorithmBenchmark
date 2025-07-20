@@ -1,0 +1,6 @@
+Pattern pattern match. Pattern-matching is important!
+A test of pattern pattern and patter n.
+Sometimes patterns overlap, like ana in banana.
+Pattern at the end pattern
+patternpatternpattern -- multiple consecutive patterns!
+PATTERN (case difference test)
