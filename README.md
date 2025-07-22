@@ -51,6 +51,54 @@ This project implements and compares classic string matching algorithms in Java.
 
 ---
 
+## Knuth-Morris-Pratt (KMP) String Matching Algorithm
+
+### Implementation Overview
+
+- Initial Java implementation of the KMP algorithm with efficient string searching using the **Longest Prefix Suffix (LPS)** preprocessing array.
+- Supports finding **all occurrences** of a pattern within a text, including overlapping matches.
+- Inputs are read from external text files in the `/benchmarks/` directory to ensure consistent and comprehensive testing.
+- The search is **case-sensitive** and character-exact, designed for ASCII-compatible text.
+
+### Testing and Validation
+
+- Thoroughly tested against a wide range of scenarios using a complex test file (`sample_test3.txt`) that includes:
+    - Repeated and overlapping patterns
+    - Patterns with special symbols and punctuation
+    - Multi-line patterns
+    - Case sensitivity checks
+    - Non-ASCII characters (exact matches only)
+- Results demonstrate that all expected occurrences are found accurately with no false positives.
+- Patterns absent from the text are correctly reported as not found.
+
+### Sample Test Results
+
+| Pattern File   | Found Indices                                                  | Pattern Used |
+|----------------|----------------------------------------------------------------|--------------|
+| case_sensitive | [128]                                                          | PATTERN      |
+| newline        | [29, 37, 45, 98, 148, 182, 206, 264, 271, 329, 365, 385, 409, 417, 425] | pattern      |
+| nonascii       | [320]                                                          | pattern      |
+| notfound       | Pattern not found                                               | xyz          |
+| overlap        | [236, 238, 246, 248]                                           | ana          |
+| withsymbol     | [118]                                                          | patt@ern     |
+| pattern        | [29, 37, 45, 98, 148, 182, 206, 264, 271, 329, 365, 385, 409, 417, 425] | pattern      |
+
+### Known Limitations
+
+- Case-sensitive matching only; no automatic case normalization.
+- Unicode and extended character sets are not currently supported.
+- The implementation focuses on correctness and robustness; performance optimizations and benchmarking will be planned for later phases.
+
+### Next Steps
+
+- Introduce case-insensitive search support.
+- Extend testing to include larger and more diverse datasets.
+- Implement and benchmark additional algorithms (e.g., Boyer-Moore, Suffix Trees).
+- Develop benchmarking framework for accurate time and memory usage comparisons.
+
+For detailed implementation notes and test logs, please see `/docs/kmp_notes.md`.
+
+
 ## Quick Start
 
 1. Place test files in `/benchmarks`.
