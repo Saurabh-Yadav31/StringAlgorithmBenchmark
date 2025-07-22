@@ -41,15 +41,6 @@ This project implements and compares classic string matching algorithms in Java.
 
 ---
 
-## Future Work
-
-- **Algorithm expansion:** Implement KMP and Suffix Tree for direct comparison.
-- **Benchmarking:** Develop a timing and memory-measurement harness to empirically evaluate speed and memory.
-- **Optimization and tuning:** Perform code refactoring and algorithmic tuning for performance.
-- **Flexibility:** Add case-insensitive and Unicode/encoding-agnostic modes.
-- **Enhanced docs:** Update `/docs` and this README as the project evolves.
-
----
 
 ## Knuth-Morris-Pratt (KMP) String Matching Algorithm
 
@@ -97,6 +88,77 @@ This project implements and compares classic string matching algorithms in Java.
 - Develop benchmarking framework for accurate time and memory usage comparisons.
 
 For detailed implementation notes and test logs, please see `/docs/kmp_notes.md`.
+
+---
+
+## Suffix Tree Algorithm
+
+### Implementation Overview
+
+- Full implementation of Ukkonen’s suffix tree construction algorithm in Java, built from scratch.
+- Supports efficient substring search queries returning **all occurrences** of a pattern in the text.
+- Constructed suffix tree accurately handles overlapping, multi-line, special symbols, and non-ASCII characters (exact match only).
+- Pattern search traverses the suffix tree to retrieve matching suffix start indices.
+
+### Testing and Validation
+
+- Extensively tested using a complex sample text file (`sample_test3.txt`) containing diverse scenarios:
+  - Multiple repeated patterns
+  - Overlapping and boundary cases
+  - Special symbols and multi-line patterns
+- Successfully finds patterns such as `"pattern"`, `"ana"`, `"PATTERN"`, `"patt@ern"`, and more.
+- Correctly reports absence for non-existing patterns (e.g., `"xyz"`).
+
+### Key Observations
+
+- The suffix tree returns **all matching indices but in an unsorted order**.
+- This happens because child edges are stored in a `HashMap`, which does not preserve insertion or sorted order.
+- This contrasts with Boyer-Moore and KMP implementations that return sorted lists of indices.
+- Sorting can be implemented post-search or by using an order-preserving map (e.g., `LinkedHashMap`) for the children.
+
+### Sample Test Results
+
+| Pattern File   | Found Indices                                                    | Pattern Used |
+|----------------|-----------------------------------------------------------------|--------------|
+| case_sensitive | [128]                                                           | PATTERN      |
+| newline        | [148, 98, 45, 271, 425, 264, 329, 385, 417, 409, 182, 37, 29, 365, 206] | pattern      |
+| nonascii       | [320]                                                           | pattern      |
+| notfound       | Pattern not found                                               | xyz          |
+| overlap        | [238, 248, 236, 246]                                           | ana          |
+| withsymbol     | [118]                                                           | patt@ern     |
+| pattern        | [148, 98, 45, 271, 425, 264, 329, 385, 417, 409, 182, 37, 29, 365, 206] | pattern      |
+
+### Known Limitations
+
+- Child nodes use `HashMap` resulting in unordered traversal and match indices.
+- Case-sensitive and exact matching only; no out-of-the-box Unicode normalization or case-insensitive mode.
+- Benchmarking and performance optimization are pending.
+
+---
+
+## Future Work
+
+- **Complete Benchmarking:**  
+  Run systematic timing and memory comparisons against Boyer-Moore and KMP algorithms on standardized datasets.
+
+- **Algorithmic Tuning and Refactoring:**  
+  Improve tree construction efficiency and reduce memory footprint where possible.
+
+- **Match Ordering Improvements:**  
+  Consider using order-preserving maps or sorting match indices post-search to consistently return sorted results.
+
+- **Feature Enhancements:**  
+  Add case-insensitive search and Unicode/encoding-agnostic support to broaden applicability.
+
+- **Expanded Testing:**  
+  Include more extensive and real-world test datasets to validate robustness.
+
+- **Documentation Updates:**  
+  Continuously update `/docs` and README with benchmarks, optimizations, and new features as the project evolves.
+
+---
+
+*For detailed implementation notes and test logs, see `/docs/suffix_tree_notes.md`.*
 
 
 ## Quick Start
