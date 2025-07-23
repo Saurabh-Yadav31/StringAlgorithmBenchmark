@@ -1,0 +1,9 @@
+
+pattern
+ana
+résumé
+aaa
+café
+notfound
+Pattern
+a very long pattern that does not exist in the text
