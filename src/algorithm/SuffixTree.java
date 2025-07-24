@@ -158,10 +158,14 @@ public class SuffixTree {
      * Searches for a pattern in the suffix tree.
      *
      * @param pattern The substring to search for.
-     * @return List of starting positions where the pattern is found.
+     * @return List of starting positions where the pattern is found, sorted ascending.
      */
     public List<Integer> search(String pattern) {
         List<Integer> result = new ArrayList<>();
+        if (pattern == null || pattern.length() == 0) {
+            // For empty pattern, return empty list (or define your expected behavior)
+            return result;
+        }
         SuffixTreeNode currentNode = root;
         int i = 0; // Index in pattern
 
@@ -194,6 +198,8 @@ public class SuffixTree {
 
         // Pattern fully matched, collect all suffix indices under currentNode
         collectLeaves(currentNode, result);
+
+        Collections.sort(result);  // Sort results for consistent ordering
         return result;
     }
 

@@ -136,29 +136,87 @@ For detailed implementation notes and test logs, please see `/docs/kmp_notes.md`
 
 ---
 
+## Benchmarking Progress Update (July 24, 2025)
+
+### Overview
+
+This project implements and compares three string matching algorithms: **Boyer-Moore**, **Knuth-Morris-Pratt (KMP)**, and **Suffix Tree**. A comprehensive benchmarking framework has been developed to validate correctness and analyze performance.
+
+### Summary of Today's Work
+
+- **Benchmarking Utilities:**  
+  Added precise timing using `System.nanoTime()` and memory tracking with `Runtime.getRuntime()` around each algorithm's search calls to capture per-pattern execution time and heap usage.
+
+- **Benchmark Datasets:**  
+  Prepared and expanded datasets:
+  - **Small:** ~200 characters including overlapping and Unicode patterns.
+  - **Medium:** Existing dataset.
+  - **Large:** ~100,000 characters with realistic logs, repeated phrases, Unicode terms (e.g., résumé, café), unique identifiers, and overlapping substrings.
+
+- **Correctness & Benchmarking Results:**  
+  All algorithms return identical match positions across all tested patterns.  
+  Initial benchmarking shows suffix tree searches are fastest on queries after build, with Boyer-Moore and KMP performing competitively.  
+  Memory measurements exclude suffix tree build cost, which will be documented separately.
+
+- **Benchmarking Methodology:**  
+  Code snippet used in timing and memory measurement:
+
+runtime.gc();
+
+long memBefore = runtime.totalMemory() - runtime.freeMemory();
+long startTime = System.nanoTime();
+
+List<Integer> result = algorithm.searchAll(text, pattern);
+
+long endTime = System.nanoTime();
+long memAfter = runtime.totalMemory() - runtime.freeMemory();
+
+System.out.printf(
+"%s | Time: %.3f ms | Memory: %.3f MB%n",
+algorithmName,
+(endTime - startTime) / 1_000_000.0,
+(memAfter - memBefore) / (1024.0 * 1024.0)
+);
+
+
+- **Next Steps:**  
+  Create reusable benchmarking utilities.  
+  Automate multi-run averaging.  
+  Benchmark suffix tree build explicitly.  
+  Expand dataset and reporting.  
+  Begin performance optimization.
+
+### For more details, see `docs/Initial_benchmarking_report.md` in this project.
+
+
+---
+
 ## Future Work
 
 - **Complete Benchmarking:**  
-  Run systematic timing and memory comparisons against Boyer-Moore and KMP algorithms on standardized datasets.
+  Extend systematic timing and memory benchmarking to cover all datasets (small, medium, large) with multiple runs per pattern, aiming to record averaged and statistically reliable performance metrics.
 
 - **Algorithmic Tuning and Refactoring:**  
-  Improve tree construction efficiency and reduce memory footprint where possible.
+  Explore improvements in suffix tree construction speed and memory efficiency. Optimize Boyer-Moore and KMP implementations for better real-world performance and lower resource consumption.
 
-- **Match Ordering Improvements:**  
-  Consider using order-preserving maps or sorting match indices post-search to consistently return sorted results.
+- **Reusable Benchmarking Utilities::**  
+  Refactor existing timing and memory measurement code into clean, reusable utility methods for easier maintenance and scalability of benchmarks.
+
+- **Match Result Ordering:**  
+  Implement consistent sorting or order-preserving result structures to ensure all algorithms return match indices in a predictable, sorted manner.
 
 - **Feature Enhancements:**  
-  Add case-insensitive search and Unicode/encoding-agnostic support to broaden applicability.
+  Add support for case-insensitive pattern matching across all algorithms. Improve Unicode and encoding awareness to handle diverse text data robustly.
 
-- **Expanded Testing:**  
-  Include more extensive and real-world test datasets to validate robustness.
+- **Expanded Dataset Coverage:**
+  Incorporate more extensive real-world datasets including diverse languages, edge cases, longer texts, and complex pattern scenarios to validate and stress test algorithms.
 
 - **Documentation Updates:**  
   Continuously update `/docs` and README with benchmarks, optimizations, and new features as the project evolves.
 
 ---
 
-*For detailed implementation notes and test logs, see `/docs/suffix_tree_notes.md`.*
+*For detailed implementation notes and test logs, see `/docs`.*
 
 
 ## Quick Start

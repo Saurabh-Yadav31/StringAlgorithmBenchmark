@@ -1,0 +1,44 @@
+.
+pattern
+Error
+WARNING: Disk
+aaaaa
+patternrecognitiontools
+alphaBRAVOcharlie
+xyzMissing
+uniqueLongPatternWithNoMatch
+résumé
+naïve
+café
+Disk almost full
+Connection lost
+Info: Scheduled backup completed
+pattern discovery is crucial
+data
+aa
+façade
+Timeout while reading data
+User login successful
+Unauthorized access attempt
+Memory leak suspected
+Backup successfully completed
+high disk IO
+CPU temperature critical
+database synchronization failure
+service interruption
+network latency
+Error: Connection reset
+Warning: High memory usage
+Info: System maintenance scheduled
+aaaaabaaaa
+patternrecognitionsoftware
+patternrecognitionalgorithms
+authenticity and uptime
+rare data inconsistencies
+unique identifier
+system check passed
+multiple occurrences
+system reboot scheduled
+unexpectedly on node
+database query at node
+""

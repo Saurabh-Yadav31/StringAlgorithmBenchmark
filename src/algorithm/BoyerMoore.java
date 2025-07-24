@@ -3,8 +3,16 @@ import java.util.*;
 
 public class BoyerMoore {
 
-    // Main search function
+    /**
+     * Searches for the first occurrence of pattern in text using the Boyer-Moore algorithm.
+     * Returns -1 if not found.
+     */
     public int search(String text, String pattern) {
+        // Defensive: check null or empty pattern and text
+        if (pattern == null || pattern.length() == 0 || text == null || text.length() < pattern.length()) {
+            return -1;
+        }
+
         int[] badChar = preprocessBadCharacter(pattern);
         int n = text.length();
         int m = pattern.length();
@@ -18,19 +26,29 @@ public class BoyerMoore {
 
             // Pattern found
             if (j < 0) {
-                System.out.println("Pattern occurs at index " + shift);
-                return shift; // returns on first occurrence for now
+                // System.out.println("Pattern occurs at index " + shift);
+                return shift;
             } else {
-                // Calculate the bad character shift
-                shift += Math.max(1, j - badChar[text.charAt(shift + j)]);
+                // Defensive char conversion for index
+                int bcIdx = text.charAt(shift + j) & 0xFF;
+                shift += Math.max(1, j - badChar[bcIdx]);
             }
         }
         // Pattern not found
         return -1;
     }
-    // Finds all occurrences of pattern in text and returns their starting indices
+
+    /**
+     * Finds all occurrences of pattern in text, returns a list of starting indices.
+     * Returns empty list if not found or on any invalid/empty input.
+     */
     public List<Integer> searchAll(String text, String pattern) {
         List<Integer> resultIndices = new ArrayList<>();
+
+        // Defensive: empty/null checks
+        if (pattern == null || pattern.length() == 0 || text == null || pattern.length() > text.length()) {
+            return resultIndices;
+        }
         int[] badChar = preprocessBadCharacter(pattern);
         int[] goodSuffix = preprocessGoodSuffix(pattern);
 
@@ -48,7 +66,8 @@ public class BoyerMoore {
                 resultIndices.add(shift);
                 shift += goodSuffix[0]; // Use good suffix for full match
             } else {
-                int badCharShift = Math.max(1, j - badChar[text.charAt(shift + j)]);
+                int bcIdx = text.charAt(shift + j) & 0xFF;
+                int badCharShift = Math.max(1, j - badChar[bcIdx]);
                 int goodSuffixShift = goodSuffix[j];
                 shift += Math.max(badCharShift, goodSuffixShift);
             }
@@ -56,47 +75,50 @@ public class BoyerMoore {
         return resultIndices;
     }
 
-
-    // Builds the bad character shift table
+    /**
+     * Builds the bad character shift table for the pattern.
+     * Only covers ASCII chars (0..255).
+     */
     private int[] preprocessBadCharacter(String pattern) {
         int[] badChar = new int[256];
         // Initialize all occurrences as -1
-        for (int i = 0; i < 256; i++) {
-            badChar[i] = -1;
-        }
-        // Fill the actual value of last occurrence for each character
+        Arrays.fill(badChar, -1);
+
+        // Fill value of last occurrence for each char in pattern
         for (int i = 0; i < pattern.length(); i++) {
-            badChar[pattern.charAt(i)] = i;
+            badChar[pattern.charAt(i) & 0xFF] = i;
         }
         return badChar;
     }
 
-    // Placeholder for good suffix heuristic
+    /**
+     * Preprocesses the good suffix shift table for the pattern.
+     * Standard linear implementation.
+     */
     private int[] preprocessGoodSuffix(String pattern) {
         int m = pattern.length();
         int[] goodSuffix = new int[m];
         int[] borderPos = new int[m + 1];
 
-        // Step 1: Initialize all occurrences as 0
-        for (int i = 0; i < m; i++)
-            goodSuffix[i] = 0;
+        Arrays.fill(goodSuffix, 0);
 
         int i = m, j = m + 1;
-        borderPos[i] = j;  // border at pattern[m]
+        borderPos[i] = j;
 
-        // Step 2: Preprocess pattern to get border positions
+        // Preprocess pattern to get border positions
         while (i > 0) {
-            while (j <= m && pattern.charAt(i - 1) != pattern.charAt(j - 1)) {
+            while (j <= m && (i - 1 < 0 || pattern.charAt(i - 1) != pattern.charAt(j - 1))) {
                 if (goodSuffix[j - 1] == 0) {
                     goodSuffix[j - 1] = j - i;
                 }
                 j = borderPos[j];
             }
-            i--; j--;
+            i--;
+            j--;
             borderPos[i] = j;
         }
 
-        // Step 3: Fill the remaining positions of goodSuffix[]
+        // Fill remaining positions of goodSuffix[]
         j = borderPos[0];
         for (i = 0; i < m; i++) {
             if (goodSuffix[i] == 0)
@@ -107,7 +129,7 @@ public class BoyerMoore {
         return goodSuffix;
     }
 
-
+    // (For install check or playground; can be omitted in deployment.)
     public static void main(String[] args) {
         System.out.println("Setup working: Boyer-Moore class created!");
     }
