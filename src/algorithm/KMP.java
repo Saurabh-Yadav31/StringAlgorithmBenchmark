@@ -5,86 +5,75 @@ import java.util.*;
 public class KMP {
 
     /**
-     * Computes the Longest Prefix Suffix (LPS) array used in KMP algorithm.
-     * LPS[i] stores the length of the longest proper prefix which is also a suffix for the substring pattern[0..i].
-     * @param pattern The pattern string
-     * @return The computed LPS array
+     * My optimization: Accepts character arrays for efficient LPS computation
+     * (avoids repeated charAt lookups).
      */
-    public int[] computeLPSArray(String pattern) {
-        int m = pattern.length();
+    public int[] computeLPSArray(char[] pattern) {
+        int m = pattern.length;
         int[] lps = new int[m];
-        int len = 0; // length of the previous longest prefix suffix
+        int len = 0;
+        lps[0] = 0;
         int i = 1;
-        lps[0] = 0; // lps[0] is always 0
-
         while (i < m) {
-            if (pattern.charAt(i) == pattern.charAt(len)) {
+            if (pattern[i] == pattern[len]) {
                 len++;
                 lps[i] = len;
                 i++;
+            } else if (len != 0) {
+                len = lps[len - 1];
             } else {
-                if (len != 0) {
-                    len = lps[len - 1];
-                } else {
-                    lps[i] = 0;
-                    i++;
-                }
+                lps[i] = 0;
+                i++;
             }
         }
         return lps;
     }
 
     /**
-     * Searches for all occurrences of the pattern in the text using the KMP algorithm.
-     * Returns list of all starting indices where pattern is found.
-     * Returns empty list if pattern is null or empty.
+     * My optimized KMP implementation:
+     * - Converts input strings to char arrays for faster access in search loop.
+     * - Streamlines defensive checks and tightens main matching logic.
+     * - Minimizes expensive method calls (charAt) and leverages pre-allocated arrays for speed.
      *
-     * @param text    The input text to search within
-     * @param pattern The pattern to find
-     * @return List of indices where pattern starts in text
+     * Returns list of all starting indices for pattern matches.
      */
     public List<Integer> KMPSearch(String text, String pattern) {
         List<Integer> result = new ArrayList<>();
+        // Defensive input checks moved to the top and streamlined for efficiency
+        if (pattern == null || text == null) return result;
+        int n = text.length(), m = pattern.length();
+        if (m == 0 || m > n) return result;
 
-        // Defensive checks for empty or null pattern or text
-        if (pattern == null || pattern.length() == 0 || text == null || pattern.length() > text.length()) {
-            return result; // empty list
-        }
+        // My optimization: Use char arrays for faster character comparison inside the loop
+        char[] txt = text.toCharArray();
+        char[] pat = pattern.toCharArray();
+        int[] lps = computeLPSArray(pat);
 
-        int n = text.length();
-        int m = pattern.length();
-        int[] lps = computeLPSArray(pattern);
-        int i = 0; // index for text
-        int j = 0; // index for pattern
-
+        int i = 0, j = 0;
         while (i < n) {
-            if (pattern.charAt(j) == text.charAt(i)) {
-                i++;
-                j++;
-            }
-            if (j == m) {
-                // Match found, add start index to results
-                result.add(i - j);
-                // Continue search for next matches
-                j = lps[j - 1];
-            } else if (i < n && pattern.charAt(j) != text.charAt(i)) {
-                // Mismatch after j matches
-                if (j != 0) {
-                    j = lps[j - 1]; // Use LPS to avoid unnecessary comparisons
-                } else {
-                    i++;
+            if (pat[j] == txt[i]) {
+                i++; j++;
+                if (j == m) {
+                    // Pattern found, add start index to result
+                    result.add(i - j);
+                    // Prepare for next possible match using LPS array (no time wasted)
+                    j = lps[j - 1];
                 }
+            } else if (j > 0) {
+                // Use LPS to skip unnecessary checks (classic KMP jump)
+                j = lps[j - 1];
+            } else {
+                i++;
             }
         }
         return result;
     }
 
-    // Optional test main to verify working implementation
+    // Simple test run (can be removed or kept for quick verification during development)
     public static void main(String[] args) {
         KMP kmp = new KMP();
         String text = "ababcababcababc";
         String pattern = "ababc";
-        List<Integer> matches = kmp.KMPSearch(text, pattern);
-        System.out.println("Pattern found at indices: " + matches);
+        System.out.println("Pattern found at indices: " + kmp.KMPSearch(text, pattern));
     }
 }

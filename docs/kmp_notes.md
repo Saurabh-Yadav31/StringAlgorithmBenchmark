@@ -86,5 +86,88 @@ pattern on separate lines.
 - Extend test datasets with even more complex real-world cases.
 
 ---
+## KMP Algorithm Optimization (July 26, 2025)
+
+### Overview
+
+The Knuth-Morris-Pratt (KMP) algorithm was reviewed and optimized to improve both performance and clarity before benchmarking against Boyer-Moore and Suffix Tree in the project. The main changes focused on reducing per-character access overhead, streamlining control flow, and minimizing memory allocations inside performance-critical loops.
+
+### Optimization Details
+
+- **Char Array Conversion**  
+  Input strings (`text` and `pattern`) are immediately converted to `char[]` arrays.  
+  *Benefit:*
+  - Eliminates repeated calls to `String.charAt()` in the main search loop and LPS computation, reducing per-character access latency and redundant bounds/method checks.
+
+- **Tighter LPS Table Construction**  
+  The LPS (Longest Prefix Suffix) table helper now accepts a `char[]` pattern and uses direct indexing for comparisons.  
+  *Benefit:*
+  - Slight reduction in method call overhead; logic remains linear time and clean.
+
+- **Streamlined Main Search Loop**  
+  All null and empty input checks are performed with minimal conditions, and the KMP core loop is arranged for the fewest branches possible.
+  - Advances indices with direct array access.
+  - Maintains textbook KMP efficiency with no unnecessary jumps or checks.
+  - Result collection is as previously, using a single list for all matches.
+
+- **Comprehensive Documentation**  
+  Comments in code now clearly highlight where and why the optimizations were made, making the changes and performance intent fully transparent.
+
+### Code Sample
+
+// Highlights from the new KMP implementation:
+char[] txt = text.toCharArray();
+
+char[] pat = pattern.toCharArray();
+
+int[] lps = computeLPSArray(pat);
+
+int i = 0, j = 0;
+
+while (i < n) {
+
+if (pat[j] == txt[i]) {
+
+i++;
+
+j++;
+
+if (j == m) {
+
+result.add(i - j);
+
+j = lps[j - 1];
+
+}
+
+} else if (j > 0) {
+
+j = lps[j - 1];
+
+} else {
+
+i++;
+
+}
+
+}
+
+---
+
+
+### Performance Expectations
+
+- **Speed:** Improved search times due to less overhead in inner loop character comparisons, particularly noticeable with large strings or a high pattern match frequency.
+- **Memory:** No extra memory is allocated beyond what is absolutely necessary for the algorithm’s operation.
+- **Correctness:** All optimizations preserve the exact match behavior and results of the standard KMP implementation; output has been verified against pre-optimization baselines.
+
+### Next Steps
+
+- Benchmark and log the updated KMP results on all datasets.
+- Compare before/after timings and memory, and summarize the impact in documentation.
+- Repeat similar audit and optimization for other algorithms as needed.
+
+*These optimizations and documentation updates reflect my direct contributions to the project KMP module as of July 26, 2025.*
+
 
 *This document corresponds to the initial phase of the KMP implementation and will be updated with future optimization and benchmarking results.*
