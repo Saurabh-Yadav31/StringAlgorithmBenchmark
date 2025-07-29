@@ -80,6 +80,47 @@ This document details the initial implementation of the Boyer-Moore string match
 
 ---
 
+## Boyer-Moore Algorithm Optimization – July 27, 2025
+
+### Overview
+
+This update focuses on optimizing the Boyer-Moore string matching implementation to improve the runtime efficiency, especially for large texts and patterns, without altering algorithm correctness or baseline behavior.
+
+### Changes and Optimizations
+
+- **Use of `char[]` Arrays for Pattern and Text:**  
+  All character accesses in the core search loops have been switched from repeated `String.charAt()` calls to direct indexing in `char[]` arrays.  
+  *Benefit:*
+  - Reduces method call overhead and bounds checking in tight loops.
+  - Produces measurable speed improvements in pattern searching.
+
+- **Early Defensive Input Checks:**  
+  Null and length validations for `text` and `pattern` strings are now done immediately at the beginning of `search` and `searchAll` methods.  
+  *Benefit:*
+  - Avoids unnecessary allocations and computations if inputs are invalid or trivial cases.
+
+- **Consistent Preprocessing Inputs:**  
+  The `preprocessBadCharacter` and `preprocessGoodSuffix` methods have been refactored to accept `char[]` arrays instead of `String` objects for consistent speed and reduced overhead.
+
+- **Preserved Default Result Collection Structures:**  
+  The match positions are still collected in default-sized `ArrayList` objects as per project design, balancing simplicity and memory efficiency.
+
+### No Changes Made
+
+- Case-sensitivity and ASCII-only matching behavior remain unchanged to meet project requirements.
+- No additional memory allocations or complex data structures introduced beyond current baseline.
+
+### Summary
+
+This optimization provides a clear performance benefit through low-level code improvements while maintaining the existing algorithm’s behavior and interface. It prepares the Boyer-Moore component for more accurate, consistent benchmarking alongside KMP and Suffix Tree algorithms in the project’s next evaluation phases.
+
+---
+
+*This changelog documents my direct contributions and code updates on the Boyer-Moore module as of July 27, 2025.*
+
+
+---
+
 ## 7. Lessons Learned
 
 - Boyer-Moore is robust and efficient in ASCII, case-sensitive scenarios.
