@@ -133,10 +133,10 @@ public class BoyerMoore {
     }
 
     // (For quick check or manual tests; not part of final benchmarks.)
-    public static void main(String[] args) {
-        BoyerMoore bm = new BoyerMoore();
-        String text = "HERE IS A SIMPLE EXAMPLE";
-        String pattern = "EXAMPLE";
-        System.out.println(bm.searchAll(text, pattern));
-    }
+    //public static void main(String[] args) {
+        //BoyerMoore bm = new BoyerMoore();
+        //String text = "HERE IS A SIMPLE EXAMPLE";
+        //String pattern = "EXAMPLE";
+        //System.out.println(bm.searchAll(text, pattern));
+   // }
 }
